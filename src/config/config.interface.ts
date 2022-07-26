@@ -14,4 +14,5 @@ export interface Config {
   password: string;
   project: string;
   dist: string;
+  timeout?:number;
 }

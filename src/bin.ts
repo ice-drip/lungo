@@ -55,7 +55,7 @@ interface CommonFile {
 }
 
 let client: Client | null = null;
-
+let delCommand = "echo no file delete";
 const bin$ = (config: Config) =>
   ssh$(config).pipe(
     tap((conn) => {
@@ -76,25 +76,37 @@ const bin$ = (config: Config) =>
             filename: item,
             date: matchTime
               ? dayjs(Number(matchTime[1])).format("YYYY-MM-DD HH:mm:ss")
-              : ""
+              : "",
           };
         })
         .sort((x, y) => Number(x.date < y.date));
       console.log(chalk.green(`共存在${backFile.length}份备份;`));
+      if (config["timeout"]) {
+        //
+        const timeout = config.timeout;
+        const delTime = backFile
+          .filter(({ date }) => dayjs().subtract(timeout, "day").isAfter(date))
+          .map(({ filename }) => {
+            const matchTime = filename.match(bakFileRegex) as RegExpMatchArray;
+            return matchTime[1];
+          });
+        delCommand = `rm -r ${config.serverDir}/${config.project}.bak.{${delTime.join(",")}}`;
+        console.log(chalk.green(`共需要删除${delTime.length}份备份`));
+      }
       if (backFile.length > 0) {
         const backTable = new Table({
           columns: [
             { name: "index", alignment: "right", color: "green" },
             { name: "filename", color: "green" },
-            { name: "date", color: "green" }
-          ]
+            { name: "date", color: "green" },
+          ],
         });
         backTable.addRows(
           backFile.map((item, index) => {
             return {
               index: index + 1,
               filename: item.filename,
-              date: item.date
+              date: item.date,
             };
           })
         );
@@ -120,7 +132,8 @@ const bin$ = (config: Config) =>
     map((command) => {
       return command.del;
     }),
-    concatMap((command) => exec$(client as Client, command))
+    concatMap((command) => exec$(client as Client, command)),
+    concatMap(()=>exec$(client as Client,delCommand))
   );
 bin$(useConfg).subscribe((_res) => {
   console.log(chalk.green("上传成功"));

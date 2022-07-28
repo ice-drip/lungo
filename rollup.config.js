@@ -11,10 +11,9 @@ import hashbang from "rollup-plugin-hashbang";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import json from "@rollup/plugin-json";
-import replace from '@rollup/plugin-replace';
-import {resolve} from "path";
-import {rmdirSync} from "fs";
-
+import replace from "@rollup/plugin-replace";
+import { resolve } from "path";
+import { rmdirSync } from "fs";
 
 function rollupBuildUtil() {
   return {
@@ -36,7 +35,7 @@ const plugins = [
   typescript(),
   json(),
   replace({
-    "require('node:":"require('"
+    "require('node:": "require('"
   }),
   hashbang()
 ];
@@ -46,7 +45,7 @@ const config = [
     input: "src/bin.ts",
     output: {
       format: "cjs",
-      banner: '#!/usr/bin/env node',
+      banner: "#!/usr/bin/env node",
       file: "./dist/bin.js"
     },
     plugins

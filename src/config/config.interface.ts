@@ -14,10 +14,10 @@ export interface Config {
   password: string;
   project: string;
   dist: string;
-  timeout?:number;
-  forward?:Forward;
+  timeout?: number;
+  forward?: Forward;
 }
-interface Forward{
+interface Forward {
   host: string;
   port: number;
   username: string;

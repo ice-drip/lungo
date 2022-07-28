@@ -76,7 +76,7 @@ const bin$ = (config: Config) =>
             filename: item,
             date: matchTime
               ? dayjs(Number(matchTime[1])).format("YYYY-MM-DD HH:mm:ss")
-              : "",
+              : ""
           };
         })
         .sort((x, y) => Number(x.date < y.date));
@@ -90,7 +90,9 @@ const bin$ = (config: Config) =>
             const matchTime = filename.match(bakFileRegex) as RegExpMatchArray;
             return matchTime[1];
           });
-        delCommand = `rm -r ${config.serverDir}/${config.project}.bak.{${delTime.join(",")}}`;
+        delCommand = `rm -r ${config.serverDir}/${
+          config.project
+        }.bak.{${delTime.join(",")}}`;
         console.log(chalk.green(`共需要删除${delTime.length}份备份`));
       }
       if (backFile.length > 0) {
@@ -98,15 +100,15 @@ const bin$ = (config: Config) =>
           columns: [
             { name: "index", alignment: "right", color: "green" },
             { name: "filename", color: "green" },
-            { name: "date", color: "green" },
-          ],
+            { name: "date", color: "green" }
+          ]
         });
         backTable.addRows(
           backFile.map((item, index) => {
             return {
               index: index + 1,
               filename: item.filename,
-              date: item.date,
+              date: item.date
             };
           })
         );
@@ -133,7 +135,7 @@ const bin$ = (config: Config) =>
       return command.del;
     }),
     concatMap((command) => exec$(client as Client, command)),
-    concatMap(()=>exec$(client as Client,delCommand))
+    concatMap(() => exec$(client as Client, delCommand))
   );
 bin$(useConfg).subscribe((_res) => {
   console.log(chalk.green("上传成功"));

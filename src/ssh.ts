@@ -40,7 +40,7 @@ const ssh$ = (config: Config) =>
                   host: config.host,
                   port: config.port,
                   username: config.username,
-                  password: config.password,
+                  password: config.password
                 });
             }
           );
@@ -58,7 +58,7 @@ const ssh$ = (config: Config) =>
           host: config.host,
           port: config.port,
           username: config.username,
-          password: config.password,
+          password: config.password
         });
     }
   });

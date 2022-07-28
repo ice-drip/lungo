@@ -26,7 +26,7 @@ Install with pnpm
 
 Examples Config
 
-```json
+```typescript
 {
   "production": {
     "serverDir": "/home/nginx/web/dev",
@@ -35,7 +35,13 @@ Examples Config
     "username": "username",
     "password": "password",
     "project": "kaffee-lungo",
-    "dist":"dist"
+    "dist":"dist",
+    "forward":{
+      "host": "192.168.1.2",
+      "port": 22,
+      "username": "username",
+      "password": "password",
+    }
   }
 }
 ```

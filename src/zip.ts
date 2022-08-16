@@ -21,7 +21,7 @@ function createZip(path: string, dist: string): AdmZip {
         !item.path.includes(".bundle_info") && !item.dirent.isDirectory()
     )
     .map((item) => {
-      const relativePath = item.relative.split(sep).join("/").split("dist/")[1];
+      const relativePath = item.relative.split(sep).join("/").split(dist)[1];
       const lastIndex = relativePath.lastIndexOf("/");
       return {
         ...item,

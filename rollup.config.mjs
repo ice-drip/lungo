@@ -15,6 +15,7 @@ import replace from "@rollup/plugin-replace";
 import { resolve } from "path";
 import { rmdirSync } from "fs";
 
+
 function rollupBuildUtil() {
   return {
     name: "build-util",
@@ -37,7 +38,7 @@ const plugins = [
   replace({
     "require('node:": "require('"
   }),
-  hashbang()
+  hashbang.default()
 ];
 
 const config = [

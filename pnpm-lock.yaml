@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      adm-zip:
+        specifier: 0.5.12
+        version: 0.5.12
       ssh2:
         specifier: ^1.15.0
         version: 1.15.0
@@ -39,9 +42,6 @@ importers:
       '@types/ssh2':
         specifier: ^1.15.0
         version: 1.15.0
-      adm-zip:
-        specifier: ^0.5.14
-        version: 0.5.14
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
@@ -251,9 +251,9 @@ packages:
   '@types/ssh2@1.15.0':
     resolution: {integrity: sha512-YcT8jP5F8NzWeevWvcyrrLB3zcneVjzYY9ZDSMAMboI+2zR1qYWFhwsyOFVzT7Jorn67vqxC0FRiw8YyG9P1ww==}
 
-  adm-zip@0.5.14:
-    resolution: {integrity: sha512-DnyqqifT4Jrcvb8USYjp6FHtBpEIz1mnXu6pTRHZ0RL69LbQYiO+0lDFg5+OKA7U29oWSs3a/i8fhn8ZcceIWg==}
-    engines: {node: '>=12.0'}
+  adm-zip@0.5.12:
+    resolution: {integrity: sha512-6TVU49mK6KZb4qG6xWaaM4C7sA/sgUMLy/JYMOzkcp3BvVLpW0fXDFQiIzAuxFCt/2+xD7fNIiPFAoLZPhVNLQ==}
+    engines: {node: '>=6.0'}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -741,7 +741,7 @@ snapshots:
     dependencies:
       '@types/node': 18.19.39
 
-  adm-zip@0.5.14: {}
+  adm-zip@0.5.12: {}
 
   ansi-regex@5.0.1: {}
 

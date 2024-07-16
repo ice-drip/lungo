@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /*
  * @Author: Rikka
  * @Date: 2022-05-11 10:22:38

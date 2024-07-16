@@ -38,7 +38,7 @@ const plugins = [
   replace({
     "require('node:": "require('"
   }),
-  hashbang.default()
+  // hashbang.default()
 ];
 
 const config = [

@@ -1,4 +1,4 @@
-import { logger } from './logger';
+import { logger } from "./logger";
 
 export interface ProgressBar {
   tick: (message?: string) => void;
@@ -13,7 +13,7 @@ export function createProgressBar(total: number): ProgressBar {
     const percent = Math.round((current / total) * 100);
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
 
-    logger.info(`[${percent}%] [${elapsed}s] ${message ?? ''}`);
+    logger.info(`[${percent}%] [${elapsed}s] ${message ?? ""}`);
   }
 
   return {
@@ -22,7 +22,7 @@ export function createProgressBar(total: number): ProgressBar {
       render(message);
     },
     stop() {
-      render('Done');
+      render("Done");
     },
   };
 }

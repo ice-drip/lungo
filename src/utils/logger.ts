@@ -1,8 +1,8 @@
-import { createConsola } from 'consola';
+import { createConsola } from "consola";
 
 export const logger = createConsola({
   defaults: {
-    tag: 'lungo',
+    tag: "lungo",
   },
 });
 

@@ -1,32 +1,32 @@
-import { defineCommand } from 'citty';
-import { Table } from 'console-table-printer';
-import { loadConfig } from '../config/loader';
-import { sshConnect } from '../core/ssh';
-import { execCommand } from '../core/remote-exec';
-import { listBackups } from '../services/backup';
-import { logger } from '../utils/logger';
-import { concatMap, map } from 'rxjs';
+import { defineCommand } from "citty";
+import { Table } from "console-table-printer";
+import { concatMap, map } from "rxjs";
+import { loadConfig } from "../config/loader";
+import { execCommand } from "../core/remote-exec";
+import { sshConnect } from "../core/ssh";
+import { listBackups } from "../services/backup";
+import { logger } from "../utils/logger";
 
 export const list = defineCommand({
   meta: {
-    name: 'list',
-    description: 'List backups on the remote server',
+    name: "list",
+    description: "List backups on the remote server",
   },
   args: {
     env: {
-      type: 'string',
-      description: 'Environment name (required)',
-      alias: ['e'],
+      type: "string",
+      description: "Environment name (required)",
+      alias: ["e"],
     },
     config: {
-      type: 'string',
-      description: 'Config file path',
-      alias: ['c'],
+      type: "string",
+      description: "Config file path",
+      alias: ["c"],
     },
   },
   async run({ args }) {
     if (!args.env) {
-      logger.error('--env is required. Usage: lungo list --env production');
+      logger.error("--env is required. Usage: lungo list --env production");
       process.exit(1);
     }
 
@@ -40,9 +40,9 @@ export const list = defineCommand({
     await new Promise<void>((resolve, reject) => {
       sshConnect(config)
         .pipe(
-          concatMap((conn) =>
+          concatMap(conn =>
             execCommand(conn, `ls ${config.serverDir}`).pipe(
-              map((output) => ({ conn, output })),
+              map(output => ({ conn, output })),
             ),
           ),
           concatMap(({ conn, output }) =>
@@ -57,13 +57,14 @@ export const list = defineCommand({
         .subscribe({
           next: (backups) => {
             if (backups.length === 0) {
-              logger.info('No backups found');
-            } else {
+              logger.info("No backups found");
+            }
+            else {
               const table = new Table({
                 columns: [
-                  { name: 'index', alignment: 'right', color: 'green' },
-                  { name: 'filename', color: 'cyan' },
-                  { name: 'date', color: 'green' },
+                  { name: "index", alignment: "right", color: "green" },
+                  { name: "filename", color: "cyan" },
+                  { name: "date", color: "green" },
                 ],
               });
               table.addRows(
@@ -77,7 +78,7 @@ export const list = defineCommand({
             }
           },
           error: (err) => {
-            logger.error('List failed:', err.message);
+            logger.error("List failed:", err.message);
             reject(err);
           },
           complete: () => resolve(),

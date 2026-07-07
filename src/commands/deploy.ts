@@ -1,52 +1,52 @@
-import { defineCommand } from 'citty';
-import { loadConfig } from '../config/loader';
-import { runDeploy } from '../services/pipeline';
-import { sendNotification } from '../services/notify';
-import { logger, setVerbose } from '../utils/logger';
+import { defineCommand } from "citty";
+import { loadConfig } from "../config/loader";
+import { sendNotification } from "../services/notify";
+import { runDeploy } from "../services/pipeline";
+import { logger, setVerbose } from "../utils/logger";
 
 export const deploy = defineCommand({
   meta: {
-    name: 'deploy',
-    description: 'Deploy dist to remote server via SSH/SFTP',
+    name: "deploy",
+    description: "Deploy dist to remote server via SSH/SFTP",
   },
   args: {
     env: {
-      type: 'string',
-      description: 'Environment name (required)',
-      alias: ['e'],
+      type: "string",
+      description: "Environment name (required)",
+      alias: ["e"],
     },
     config: {
-      type: 'string',
-      description: 'Config file path (default: lungo.config.json)',
-      alias: ['c'],
-      valueHint: 'PATH',
+      type: "string",
+      description: "Config file path (default: lungo.config.json)",
+      alias: ["c"],
+      valueHint: "PATH",
     },
     dryRun: {
-      type: 'boolean',
-      description: 'Show deployment plan without executing',
-      alias: ['n'],
+      type: "boolean",
+      description: "Show deployment plan without executing",
+      alias: ["n"],
       default: false,
     },
     verbose: {
-      type: 'boolean',
-      description: 'Enable verbose output',
-      alias: ['v'],
+      type: "boolean",
+      description: "Enable verbose output",
+      alias: ["v"],
       default: false,
     },
     noBackup: {
-      type: 'boolean',
-      description: 'Skip backup step',
+      type: "boolean",
+      description: "Skip backup step",
       default: false,
     },
     noCleanup: {
-      type: 'boolean',
-      description: 'Skip old backup cleanup',
+      type: "boolean",
+      description: "Skip old backup cleanup",
       default: false,
     },
   },
   async run({ args }) {
     if (!args.env) {
-      logger.error('--env is required. Usage: lungo deploy --env production');
+      logger.error("--env is required. Usage: lungo deploy --env production");
       process.exit(1);
     }
 
@@ -71,11 +71,11 @@ export const deploy = defineCommand({
         noCleanup: args.noCleanup,
       }).subscribe({
         complete: () => {
-          sendNotification(config, true, 'Deploy successful');
+          sendNotification(config, true, "Deploy successful");
           resolve();
         },
         error: (err) => {
-          logger.error('Deploy failed:', err.message);
+          logger.error("Deploy failed:", err.message);
           sendNotification(config, false, err.message);
           reject(err);
         },

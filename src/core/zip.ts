@@ -1,7 +1,7 @@
-import AdmZip from 'adm-zip';
-import { readdirSync, statSync } from 'fs';
-import { resolve, sep } from 'path';
-import { logger } from '../utils/logger';
+import { readdirSync, statSync } from "node:fs";
+import { resolve, sep } from "node:path";
+import AdmZip from "adm-zip";
+import { logger } from "../utils/logger";
 
 function walkDir(dir: string, basePath: string): string[] {
   const files: string[] = [];
@@ -11,7 +11,8 @@ function walkDir(dir: string, basePath: string): string[] {
     const stat = statSync(fullPath);
     if (stat.isDirectory()) {
       files.push(...walkDir(fullPath, basePath));
-    } else {
+    }
+    else {
       files.push(fullPath);
     }
   }
@@ -30,11 +31,11 @@ export function createZip(
   const zip = new AdmZip();
 
   for (const filePath of allFiles) {
-    const relativePath = filePath.replace(distPath + sep, '');
+    const relativePath = filePath.replace(distPath + sep, "");
     // Normalize to forward slashes for cross-platform zip compatibility
-    const normalizedPath = relativePath.split(sep).join('/');
-    const lastSlash = normalizedPath.lastIndexOf('/');
-    const zipDir = lastSlash >= 0 ? normalizedPath.slice(0, lastSlash + 1) : '';
+    const normalizedPath = relativePath.split(sep).join("/");
+    const lastSlash = normalizedPath.lastIndexOf("/");
+    const zipDir = lastSlash >= 0 ? normalizedPath.slice(0, lastSlash + 1) : "";
 
     zip.addLocalFile(filePath, zipDir);
   }

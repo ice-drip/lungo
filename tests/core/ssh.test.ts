@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
-import { EventEmitter } from 'events';
-import { sshConnect } from '../../src/core/ssh';
-import type { Config } from '../../src/config/schema';
+import type { Config } from "../../src/config/schema";
+import { EventEmitter } from "node:events";
+import { describe, expect, it, vi } from "vitest";
+import { sshConnect } from "../../src/core/ssh";
 
 // Mock ssh2 Client — each new Client() returns a fresh event-emitting
 // instance so the connect flow works end-to-end.
-vi.mock('ssh2', () => {
+vi.mock("ssh2", () => {
   function createClient() {
     const emitter = new EventEmitter();
     const client: Record<string, any> = {};
@@ -14,7 +14,7 @@ vi.mock('ssh2', () => {
       return client;
     });
     client.connect = vi.fn(() => {
-      setImmediate(() => emitter.emit('ready'));
+      setImmediate(() => emitter.emit("ready"));
       return client;
     });
     client.end = vi.fn();
@@ -32,19 +32,19 @@ vi.mock('ssh2', () => {
 
 function createConfig(overrides: Partial<Config> = {}): Config {
   return {
-    serverDir: '/var/www',
-    host: '10.0.0.1',
+    serverDir: "/var/www",
+    host: "10.0.0.1",
     port: 22,
-    username: 'deploy',
-    password: 'secret',
-    project: 'my-app',
-    dist: 'dist',
+    username: "deploy",
+    password: "secret",
+    project: "my-app",
+    dist: "dist",
     ...overrides,
   };
 }
 
-describe('sshConnect', () => {
-  it('emits client on ready and completes on close (password auth)', async () => {
+describe("sshConnect", () => {
+  it("emits client on ready and completes on close (password auth)", async () => {
     const config = createConfig();
     const client$ = sshConnect(config);
 
@@ -52,7 +52,7 @@ describe('sshConnect', () => {
     // the observable emitting the Client instance
     const result = await new Promise((resolve, reject) => {
       client$.subscribe({
-        next: (client) => resolve(client),
+        next: client => resolve(client),
         error: reject,
       });
     });
@@ -60,16 +60,16 @@ describe('sshConnect', () => {
     expect(result).toBeDefined();
   });
 
-  it('calls connect with password when password is provided', () => {
+  it("calls connect with password when password is provided", () => {
     // This test verifies observable creation doesn't throw
-    const config = createConfig({ password: 'mypass' });
+    const config = createConfig({ password: "mypass" });
     expect(() => sshConnect(config)).not.toThrow();
   });
 
-  it('calls connect with privateKey when privateKey is provided', () => {
+  it("calls connect with privateKey when privateKey is provided", () => {
     const config = createConfig({
       password: undefined as unknown as string,
-      privateKey: '~/.ssh/id_rsa',
+      privateKey: "~/.ssh/id_rsa",
     });
     expect(() => sshConnect(config)).not.toThrow();
   });

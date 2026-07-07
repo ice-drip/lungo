@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const ForwardSchema = z.object({
   host: z.string(),
@@ -7,13 +7,13 @@ export const ForwardSchema = z.object({
   password: z.string().optional(),
   privateKey: z.string().optional(),
   passphrase: z.string().optional(),
-  forwardHost: z.string().default('127.0.0.1'),
+  forwardHost: z.string().default("127.0.0.1"),
   forwardPort: z.number().default(0),
 });
 
 export const NotifySchema = z.object({
   url: z.string(),
-  method: z.enum(['POST', 'GET']).default('POST'),
+  method: z.enum(["POST", "GET"]).default("POST"),
   headers: z.record(z.string(), z.string()).optional(),
 });
 
@@ -29,7 +29,7 @@ export const ConfigSchema = z.object({
   username: z.string(),
   password: z.string().optional(),
   project: z.string(),
-  dist: z.string().default('dist'),
+  dist: z.string().default("dist"),
 
   timeout: z.number().optional(),
   forward: ForwardSchema.optional(),

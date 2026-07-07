@@ -1,95 +1,95 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { sendNotification } from '../../src/services/notify';
-import type { Config } from '../../src/config/schema';
+import type { Config } from "../../src/config/schema";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { sendNotification } from "../../src/services/notify";
 
 const originalFetch = globalThis.fetch;
 
-describe('sendNotification', () => {
+describe("sendNotification", () => {
   afterEach(() => {
     globalThis.fetch = originalFetch;
   });
 
-  it('sends POST notification when config has notify', async () => {
+  it("sends POST notification when config has notify", async () => {
     const mockFetch = vi.fn().mockResolvedValue({ ok: true });
     globalThis.fetch = mockFetch as any;
 
     const config: Config = {
-      serverDir: '/var/www',
-      host: '10.0.0.1',
+      serverDir: "/var/www",
+      host: "10.0.0.1",
       port: 22,
-      username: 'deploy',
-      project: 'my-app',
-      dist: 'dist',
-      notify: { url: 'https://hooks.example.com', method: 'POST' },
+      username: "deploy",
+      project: "my-app",
+      dist: "dist",
+      notify: { url: "https://hooks.example.com", method: "POST" },
     };
 
-    await sendNotification(config, true, 'Deploy successful');
+    await sendNotification(config, true, "Deploy successful");
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://hooks.example.com',
-      expect.objectContaining({ method: 'POST' }),
+      "https://hooks.example.com",
+      expect.objectContaining({ method: "POST" }),
     );
   });
 
-  it('does nothing when config has no notify', async () => {
+  it("does nothing when config has no notify", async () => {
     const mockFetch = vi.fn();
     globalThis.fetch = mockFetch as any;
 
     const config: Config = {
-      serverDir: '/var/www',
-      host: '10.0.0.1',
+      serverDir: "/var/www",
+      host: "10.0.0.1",
       port: 22,
-      username: 'deploy',
-      project: 'my-app',
-      dist: 'dist',
+      username: "deploy",
+      project: "my-app",
+      dist: "dist",
     };
 
-    await sendNotification(config, true, 'Deploy successful');
+    await sendNotification(config, true, "Deploy successful");
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it('sends GET notification when method is GET', async () => {
+  it("sends GET notification when method is GET", async () => {
     const mockFetch = vi.fn().mockResolvedValue({ ok: true });
     globalThis.fetch = mockFetch as any;
 
     const config: Config = {
-      serverDir: '/var/www',
-      host: '10.0.0.1',
+      serverDir: "/var/www",
+      host: "10.0.0.1",
       port: 22,
-      username: 'deploy',
-      project: 'my-app',
-      dist: 'dist',
-      notify: { url: 'https://hooks.example.com/status', method: 'GET' },
+      username: "deploy",
+      project: "my-app",
+      dist: "dist",
+      notify: { url: "https://hooks.example.com/status", method: "GET" },
     };
 
-    await sendNotification(config, true, 'Deploy successful');
+    await sendNotification(config, true, "Deploy successful");
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://hooks.example.com/status',
+      "https://hooks.example.com/status",
       expect.objectContaining({
-        method: 'GET',
+        method: "GET",
         body: undefined,
       }),
     );
   });
 
-  it('handles fetch failure gracefully', async () => {
-    const mockFetch = vi.fn().mockRejectedValue(new Error('Network error'));
+  it("handles fetch failure gracefully", async () => {
+    const mockFetch = vi.fn().mockRejectedValue(new Error("Network error"));
     globalThis.fetch = mockFetch as any;
 
     const config: Config = {
-      serverDir: '/var/www',
-      host: '10.0.0.1',
+      serverDir: "/var/www",
+      host: "10.0.0.1",
       port: 22,
-      username: 'deploy',
-      project: 'my-app',
-      dist: 'dist',
-      notify: { url: 'https://hooks.example.com', method: 'POST' },
+      username: "deploy",
+      project: "my-app",
+      dist: "dist",
+      notify: { url: "https://hooks.example.com", method: "POST" },
     };
 
     // Should not throw
     await expect(
-      sendNotification(config, true, 'Deploy successful'),
+      sendNotification(config, true, "Deploy successful"),
     ).resolves.toBeUndefined();
   });
 });

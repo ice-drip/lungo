@@ -1,10 +1,10 @@
-import { createReadStream, rmSync } from 'fs';
-import { resolve } from 'path';
-import { Observable } from 'rxjs';
-import type { Client, SFTPWrapper } from 'ssh2';
-import type { Config } from '../config/schema';
-import { createZip } from './zip';
-import { logger } from '../utils/logger';
+import type { Client, SFTPWrapper } from "ssh2";
+import type { Config } from "../config/schema";
+import { createReadStream, rmSync } from "node:fs";
+import { resolve } from "node:path";
+import { Observable } from "rxjs";
+import { logger } from "../utils/logger";
+import { createZip } from "./zip";
 
 interface SftpResult {
   command: string;
@@ -18,12 +18,13 @@ export function sftpUpload(
 ): Observable<SftpResult> {
   return new Observable<SftpResult>((observer) => {
     let sftp: SFTPWrapper | undefined;
-    const zipPath = resolve(projectDir, 'lungo-deploy.zip');
+    const zipPath = resolve(projectDir, "lungo-deploy.zip");
 
     const cleanup = () => {
       try {
         rmSync(zipPath);
-      } catch {
+      }
+      catch {
         // ignore cleanup errors
       }
     };
@@ -42,24 +43,24 @@ export function sftpUpload(
 
       const writeStream = sftp.createWriteStream(fullFileName);
 
-      writeStream.on('close', () => {
+      writeStream.on("close", () => {
         logger.success(`Uploaded ${zipFileName}`);
         observer.next({ command, del: `rm -r ${fullFileName}` });
         observer.complete();
         cleanup();
       });
 
-      writeStream.on('error', (writeErr: Error) => {
+      writeStream.on("error", (writeErr: Error) => {
         logger.error(`Upload error: ${writeErr.message}`);
         observer.error(writeErr);
         cleanup();
       });
 
-      logger.info('Creating zip...');
+      logger.info("Creating zip...");
       createZip(projectDir, config.dist).writeZip(zipPath);
 
       const readStream = createReadStream(zipPath);
-      readStream.on('error', (readErr: Error) => {
+      readStream.on("error", (readErr: Error) => {
         logger.error(`Read error: ${readErr.message}`);
         observer.error(readErr);
         cleanup();
@@ -68,7 +69,8 @@ export function sftpUpload(
     });
 
     return () => {
-      if (sftp) sftp.end();
+      if (sftp)
+        sftp.end();
       cleanup();
     };
   });

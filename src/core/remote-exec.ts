@@ -1,11 +1,11 @@
-import { Observable } from 'rxjs';
-import type { Client } from 'ssh2';
-import { logger } from '../utils/logger';
+import type { Client } from "ssh2";
+import { Observable } from "rxjs";
+import { logger } from "../utils/logger";
 
 export function execCommand(client: Client, command: string): Observable<string> {
   return new Observable<string>((observer) => {
     logger.debug(`Executing: ${command}`);
-    let stream: import('ssh2').ClientChannel | undefined;
+    let stream: import("ssh2").ClientChannel | undefined;
 
     client.exec(command, (err, _stream) => {
       if (err) {
@@ -14,16 +14,16 @@ export function execCommand(client: Client, command: string): Observable<string>
         return;
       }
       stream = _stream;
-      let data = '';
-      stream.on('data', (chunk: Buffer | string) => {
+      let data = "";
+      stream.on("data", (chunk: Buffer | string) => {
         data += chunk.toString();
       });
-      stream.on('close', () => {
+      stream.on("close", () => {
         observer.next(data);
         observer.complete();
         stream?.destroy();
       });
-      stream.on('error', (streamErr: Error) => {
+      stream.on("error", (streamErr: Error) => {
         observer.error(streamErr);
       });
     });

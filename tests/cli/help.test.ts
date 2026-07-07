@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const CLI = resolve(__dirname, "..", "..", "dist", "bin.js");
 
-describe("cLI help", () => {
+describe("CLI help", () => {
   it("shows help with --help flag", () => {
     const output = execSync(`node ${CLI} --help`, { encoding: "utf-8" });
     expect(output).toContain("lungo");

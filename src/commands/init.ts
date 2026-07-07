@@ -5,7 +5,6 @@ import { defineCommand } from "citty";
 import { logger } from "../utils/logger";
 
 function prompt(query: string): Promise<string> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const rl = createInterface({ input: process.stdin, output: process.stdout } as any);
   return new Promise((res) => {
     rl.question(`${query}: `, (answer) => {

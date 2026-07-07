@@ -20,7 +20,7 @@ export function sftpUpload(
     let sftp: SFTPWrapper | undefined;
     const zipPath = resolve(projectDir, "lungo-deploy.zip");
 
-    const cleanup = () => {
+    const cleanup = (): void => {
       try {
         rmSync(zipPath);
       }

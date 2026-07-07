@@ -39,7 +39,6 @@ const main = defineCommand({
   async run({ args }) {
     if (args.env) {
       // Backward compatibility: lungo --env production -> deploy
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await deploy.run!({ args } as any);
     }
   },

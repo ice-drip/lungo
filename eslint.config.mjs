@@ -1,21 +1,30 @@
 import antfu from "@antfu/eslint-config";
 
-export default antfu({
-  type: "lib",
-  stylistic: {
-    quotes: "double",
-    semi: true,
-  },
-  ignores: ["dist/", "node_modules/"],
-  typescript: {
-    overrides: {
-      "ts/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+export default antfu(
+  {
+    type: "lib",
+    stylistic: {
+      quotes: "double",
+      semi: true,
+    },
+    ignores: ["dist/", "node_modules/"],
+    typescript: {
+      overrides: {
+        "ts/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      },
+    },
+    test: {
+      overrides: {
+        "ts/no-explicit-any": "off",
+        "ts/no-require-imports": "off",
+        "test/prefer-lowercase-title": "off",
+      },
     },
   },
-  test: {
-    overrides: {
-      "ts/no-explicit-any": "off",
-      "ts/no-require-imports": "off",
+  {
+    rules: {
+      "node/prefer-global/process": "off",
+      "node/prefer-global/buffer": "off",
     },
   },
-});
+);

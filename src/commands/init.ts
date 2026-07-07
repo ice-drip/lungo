@@ -5,10 +5,8 @@ import { createInterface } from 'readline';
 import { logger } from '../utils/logger';
 
 function prompt(query: string): Promise<string> {
-  const rl = createInterface({
-    input: process.stdin as NodeJS.ReadStream,
-    output: process.stdout as NodeJS.WriteStream,
-  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rl = createInterface({ input: process.stdin, output: process.stdout } as any);
   return new Promise((res) => {
     rl.question(`${query}: `, (answer) => {
       rl.close();

@@ -33,22 +33,24 @@ function buildConnectConfig(config: Config): ConnectConfig {
 export function sshConnect(config: Config): Observable<Client> {
   return new Observable<Client>((observer) => {
     const conn = new Client();
+    let forward: Client | undefined;
 
     if (config.forward) {
-      const forward = new Client();
+      const fwdConfig = config.forward;
+      forward = new Client();
       forward
         .on('ready', () => {
           logger.debug('Bastion connected, forwarding to target');
-          forward.forwardOut(
-            config.forward.forwardHost || '127.0.0.1',
-            config.forward.forwardPort || 0,
+          forward!.forwardOut(
+            fwdConfig.forwardHost,
+            fwdConfig.forwardPort,
             config.host,
             config.port,
             (err, stream) => {
               if (err) {
                 logger.error(`Bastion forward error: ${err.message}`);
                 observer.error(err);
-                forward.end();
+                forward!.end();
                 return;
               }
               conn
@@ -75,7 +77,7 @@ export function sshConnect(config: Config): Observable<Client> {
           logger.error(`Bastion connection error: ${err.message}`);
           observer.error(err);
         })
-        .connect(buildForwardConnectConfig(config.forward));
+        .connect(buildForwardConnectConfig(fwdConfig));
     } else {
       conn
         .on('ready', () => {
@@ -95,7 +97,7 @@ export function sshConnect(config: Config): Observable<Client> {
 
     return () => {
       conn.end();
-      if (config.forward) forward.end();
+      if (forward) forward.end();
     };
   });
 }

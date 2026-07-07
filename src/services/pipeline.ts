@@ -74,7 +74,7 @@ export function runDeploy(options: DeployOptions): Observable<void> {
     }),
 
     // 5. Backup current deployment
-    concatMap(({ conn, backups, dirContents }) => {
+    concatMap(({ conn, dirContents }) => {
       if (noBackup) {
         logger.info('Skipping backup');
         return [{ conn, backupCmd: 'echo "backup skipped"' } as const];

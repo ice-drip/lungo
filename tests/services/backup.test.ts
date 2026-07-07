@@ -100,10 +100,7 @@ describe('cleanupBackups', () => {
 describe('backupCurrent', () => {
   it('returns mv command when current project exists', () => {
     const config = createConfig();
-    const backups = [
-      { filename: 'my-app.bak.old', date: '2024-01-01' },
-    ];
-    // backups include "my-app" meaning the current deployment exists
+    // dirContents includes "my-app" meaning the current deployment exists
     const dirContents = ['my-app', 'my-app.bak.old'];
 
     const result$ = backupCurrent(dirContents, config);
@@ -117,7 +114,6 @@ describe('backupCurrent', () => {
 
   it('returns echo when no current deployment exists', () => {
     const config = createConfig();
-    const backups: any[] = [];
     const dirContents = ['other'];
 
     const result$ = backupCurrent(dirContents, config);

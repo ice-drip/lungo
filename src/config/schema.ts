@@ -4,7 +4,11 @@ export const ForwardSchema = z.object({
   host: z.string(),
   port: z.number().default(22),
   username: z.string(),
-  password: z.string(),
+  password: z.string().optional(),
+  privateKey: z.string().optional(),
+  passphrase: z.string().optional(),
+  forwardHost: z.string().default('127.0.0.1'),
+  forwardPort: z.number().default(0),
 });
 
 export const NotifySchema = z.object({

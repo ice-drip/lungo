@@ -1,5 +1,4 @@
 import { Observable, concatMap, map, tap } from 'rxjs';
-import type { Client } from 'ssh2';
 import type { Config } from '../config/schema';
 import { sshConnect } from '../core/ssh';
 import { execCommand } from '../core/remote-exec';
@@ -27,12 +26,7 @@ export function runDeploy(options: DeployOptions): Observable<void> {
     });
   }
 
-  let client: Client | null = null;
-
   return sshConnect(config).pipe(
-    tap((conn) => {
-      client = conn;
-    }),
 
     // 1. List directory contents
     concatMap((conn) =>
@@ -127,5 +121,5 @@ export function runDeploy(options: DeployOptions): Observable<void> {
       conn.end();
     }),
     map(() => undefined),
-  );
+  ) as Observable<void>;
 }

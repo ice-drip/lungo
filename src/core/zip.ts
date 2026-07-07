@@ -1,6 +1,6 @@
 import AdmZip from 'adm-zip';
 import { readdirSync, statSync } from 'fs';
-import { resolve, relative, sep } from 'path';
+import { resolve, sep } from 'path';
 import { logger } from '../utils/logger';
 
 function walkDir(dir: string, basePath: string): string[] {

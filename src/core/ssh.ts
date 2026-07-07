@@ -40,8 +40,8 @@ export function sshConnect(config: Config): Observable<Client> {
         .on('ready', () => {
           logger.debug('Bastion connected, forwarding to target');
           forward.forwardOut(
-            '127.0.0.1',
-            8797,
+            config.forward.forwardHost || '127.0.0.1',
+            config.forward.forwardPort || 0,
             config.host,
             config.port,
             (err, stream) => {
@@ -75,12 +75,7 @@ export function sshConnect(config: Config): Observable<Client> {
           logger.error(`Bastion connection error: ${err.message}`);
           observer.error(err);
         })
-        .connect({
-          host: config.forward.host,
-          port: config.forward.port,
-          username: config.forward.username,
-          password: config.forward.password,
-        });
+        .connect(buildForwardConnectConfig(config.forward));
     } else {
       conn
         .on('ready', () => {
@@ -97,5 +92,34 @@ export function sshConnect(config: Config): Observable<Client> {
         })
         .connect(buildConnectConfig(config));
     }
+
+    return () => {
+      conn.end();
+      if (config.forward) forward.end();
+    };
   });
+}
+
+function buildForwardConnectConfig(forward: NonNullable<Config['forward']>): ConnectConfig {
+  const connectConfig: ConnectConfig = {
+    host: forward.host,
+    port: forward.port,
+    username: forward.username,
+  };
+
+  if (forward.privateKey) {
+    const keyPath = forward.privateKey.startsWith('~')
+      ? resolve(homedir(), forward.privateKey.slice(2))
+      : resolve(forward.privateKey);
+    connectConfig.privateKey = readFileSync(keyPath, 'utf-8');
+    if (forward.passphrase) {
+      connectConfig.passphrase = forward.passphrase;
+    }
+    logger.debug('Using SSH private key authentication for bastion');
+  } else if (forward.password) {
+    connectConfig.password = forward.password;
+    logger.debug('Using SSH password authentication for bastion');
+  }
+
+  return connectConfig;
 }

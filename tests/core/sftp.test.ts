@@ -37,9 +37,11 @@ describe('sftpUpload', () => {
 
     const mockWriteStream = new EventEmitter() as any;
     mockWriteStream.destroy = vi.fn();
+    mockWriteStream.end = vi.fn();
 
     const mockSftp = {
       createWriteStream: vi.fn().mockReturnValue(mockWriteStream),
+      end: vi.fn(),
     };
 
     const mockClient = {

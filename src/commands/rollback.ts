@@ -49,7 +49,7 @@ export const rollback = defineCommand({
 
     if (args.verbose) setVerbose(true);
 
-    const { config } = await loadConfig({
+    const { config } = loadConfig({
       env: args.env,
       configPath: args.config,
     });
@@ -65,7 +65,7 @@ export const rollback = defineCommand({
             ),
           ),
           concatMap(({ conn, output }) =>
-            listBackups(output, config.serverDir, config.project).pipe(
+            listBackups(output, config.project).pipe(
               map((backups) => {
                 if (backups.length === 0) {
                   throw new Error('No backups found to rollback');

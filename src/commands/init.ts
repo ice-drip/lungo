@@ -1,6 +1,6 @@
 import { defineCommand } from 'citty';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { resolve } from 'path';
+import { resolve as resolvePath } from 'path';
 import { createInterface } from 'readline';
 import { logger } from '../utils/logger';
 
@@ -9,10 +9,10 @@ function prompt(query: string): Promise<string> {
     input: process.stdin as NodeJS.ReadStream,
     output: process.stdout as NodeJS.WriteStream,
   });
-  return new Promise((resolve) => {
+  return new Promise((res) => {
     rl.question(`${query}: `, (answer) => {
       rl.close();
-      resolve(answer.trim());
+      res(answer.trim());
     });
   });
 }
@@ -37,7 +37,7 @@ export const init = defineCommand({
   },
   async run({ args }) {
     const envName = args.env || (await prompt('Environment name (e.g., production)'));
-    const configPath = resolve(process.cwd(), 'lungo.config.json');
+    const configPath = resolvePath(process.cwd(), 'lungo.config.json');
 
     if (existsSync(configPath) && !args.force) {
       logger.info(`Config already exists at ${configPath}`);

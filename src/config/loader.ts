@@ -12,7 +12,7 @@ interface LoadConfigResult {
   configFile: string;
 }
 
-export async function loadConfig(options: LoadConfigOptions): Promise<LoadConfigResult> {
+export function loadConfig(options: LoadConfigOptions): LoadConfigResult {
   const configPath = options.configPath ?? resolve(process.cwd(), 'lungo.config.json');
 
   if (!existsSync(configPath)) {
@@ -43,25 +43,4 @@ export async function loadConfig(options: LoadConfigOptions): Promise<LoadConfig
   const config = ConfigSchema.parse(envConfig);
 
   return { config, configFile: configPath };
-}
-
-interface ResolvedAuth {
-  password?: string;
-  privateKey?: string;
-  passphrase?: string;
-}
-
-export async function resolveAuth(config: Config): Promise<ResolvedAuth> {
-  const result: ResolvedAuth = {};
-
-  if (config.privateKey) {
-    result.privateKey = config.privateKey;
-    if (config.passphrase) {
-      result.passphrase = config.passphrase;
-    }
-  } else if (config.password) {
-    result.password = config.password;
-  }
-
-  return result;
 }

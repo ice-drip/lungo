@@ -30,7 +30,7 @@ export const list = defineCommand({
       process.exit(1);
     }
 
-    const { config } = await loadConfig({
+    const { config } = loadConfig({
       env: args.env,
       configPath: args.config,
     });
@@ -46,7 +46,7 @@ export const list = defineCommand({
             ),
           ),
           concatMap(({ conn, output }) =>
-            listBackups(output, config.serverDir, config.project).pipe(
+            listBackups(output, config.project).pipe(
               map((backups) => {
                 conn.end();
                 return backups;

@@ -10,7 +10,6 @@ export interface BackupEntry {
 
 export function listBackups(
   lsOutput: string,
-  _serverDir: string,
   project: string,
 ): Observable<BackupEntry[]> {
   return new Observable<BackupEntry[]>((observer) => {
@@ -80,7 +79,6 @@ export function cleanupBackups(
 export function backupCurrent(
   dirContents: string[],
   config: Config,
-  _backups: BackupEntry[],
 ): Observable<string> {
   return new Observable<string>((observer) => {
     if (config.backup?.enabled === false) {

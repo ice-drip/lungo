@@ -56,7 +56,7 @@ export const deploy = defineCommand({
 
     logger.info(`Loading config for environment: ${args.env}`);
 
-    const { config } = await loadConfig({
+    const { config } = loadConfig({
       env: args.env,
       configPath: args.config,
     });
@@ -70,14 +70,14 @@ export const deploy = defineCommand({
         noBackup: args.noBackup,
         noCleanup: args.noCleanup,
       }).subscribe({
-        complete: () => resolve(),
+        complete: () => {
+          sendNotification(config, true, 'Deploy successful');
+          resolve();
+        },
         error: (err) => {
           logger.error('Deploy failed:', err.message);
           sendNotification(config, false, err.message);
           reject(err);
-        },
-        next: () => {
-          sendNotification(config, true, 'Deploy successful');
         },
       });
     });

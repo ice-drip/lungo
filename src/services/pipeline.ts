@@ -1,3 +1,4 @@
+import { execSync } from 'child_process';
 import { Observable, concatMap, map, tap } from 'rxjs';
 import type { Config } from '../config/schema';
 import { sshConnect } from '../core/ssh';
@@ -26,9 +27,15 @@ export function runDeploy(options: DeployOptions): Observable<void> {
     });
   }
 
+  // 1. Local pre-deploy hook (runs before SSH connection)
+  if (config.preDeploy) {
+    logger.info(`Running pre-deploy: ${config.preDeploy}`);
+    execSync(config.preDeploy, { cwd: process.cwd(), stdio: 'inherit' });
+  }
+
   return sshConnect(config).pipe(
 
-    // 1. List directory contents
+    // 2. List directory contents
     concatMap((conn) =>
       execCommand(conn, `ls ${config.serverDir}`).pipe(
         map((output) => ({
@@ -40,7 +47,7 @@ export function runDeploy(options: DeployOptions): Observable<void> {
 
     // 2. Identify backups
     concatMap(({ conn, dirContents }) =>
-      listBackups(dirContents.join('\n'), config.serverDir, config.project).pipe(
+      listBackups(dirContents.join('\n'), config.project).pipe(
         map((backups) => ({ conn, backups, dirContents })),
       ),
     ),
@@ -72,7 +79,7 @@ export function runDeploy(options: DeployOptions): Observable<void> {
         logger.info('Skipping backup');
         return [{ conn, backupCmd: 'echo "backup skipped"' } as const];
       }
-      return backupCurrent(dirContents, config, backups).pipe(
+      return backupCurrent(dirContents, config).pipe(
         map((cmd) => ({ conn, backupCmd: cmd })),
       );
     }),
@@ -82,32 +89,24 @@ export function runDeploy(options: DeployOptions): Observable<void> {
       execCommand(conn, backupCmd).pipe(map(() => ({ conn }))),
     ),
 
-    // 7. Pre-deploy hook
-    concatMap(({ conn }) => {
-      if (config.preDeploy) {
-        return execCommand(conn, config.preDeploy).pipe(map(() => ({ conn })));
-      }
-      return [{ conn } as const];
-    }),
-
-    // 8. Upload & unzip
+    // 7. Upload & unzip
     concatMap(({ conn }) =>
       sftpUpload(config, conn, process.cwd()).pipe(
         map(({ command, del }) => ({ conn, unzipCmd: command, delCmd: del })),
       ),
     ),
 
-    // 9. Unzip on remote
+    // 8. Unzip on remote
     concatMap(({ conn, unzipCmd, delCmd }) =>
       execCommand(conn, unzipCmd).pipe(map(() => ({ conn, delCmd }))),
     ),
 
-    // 10. Delete zip on remote
+    // 9. Delete zip on remote
     concatMap(({ conn, delCmd }) =>
       execCommand(conn, delCmd).pipe(map(() => ({ conn }))),
     ),
 
-    // 11. Post-deploy hook
+    // 10. Post-deploy hook
     concatMap(({ conn }) => {
       if (config.postDeploy) {
         return execCommand(conn, config.postDeploy).pipe(map(() => ({ conn })));
@@ -115,7 +114,7 @@ export function runDeploy(options: DeployOptions): Observable<void> {
       return [{ conn } as const];
     }),
 
-    // 12. Finalize
+    // 11. Finalize
     tap(({ conn }) => {
       logger.success('Deploy complete!');
       conn.end();

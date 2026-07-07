@@ -1,8 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { existsSync, mkdirSync, writeFileSync, rmSync } from 'fs';
 import { resolve } from 'path';
-import { loadConfig, resolveAuth } from '../../src/config/loader';
-import type { Config } from '../../src/config/schema';
+import { loadConfig } from '../../src/config/loader';
 
 const TEST_DIR = resolve(__dirname, '__fixtures__');
 
@@ -46,69 +45,25 @@ describe('loadConfig', () => {
     expect(config.dist).toBe('dist'); // default
   });
 
-  it('throws when env key is missing from config', async () => {
+  it('throws when env key is missing from config', () => {
     writeConfig('lungo.config.json', {
       staging: { serverDir: '/var/www', host: '10.0.0.1', username: 'u', password: 'p', project: 'x' },
     });
 
-    await expect(
+    expect(() =>
       loadConfig({
         env: 'production',
         configPath: resolve(TEST_DIR, 'loader-test', 'lungo.config.json'),
       }),
-    ).rejects.toThrow(/production/);
+    ).toThrow(/production/);
   });
 
-  it('throws when config file does not exist', async () => {
-    await expect(
+  it('throws when config file does not exist', () => {
+    expect(() =>
       loadConfig({
         env: 'production',
         configPath: resolve(TEST_DIR, 'loader-test', 'nonexistent.json'),
       }),
-    ).rejects.toThrow(/not found/);
-  });
-});
-
-describe('resolveAuth', () => {
-  it('returns password when config has password', async () => {
-    const config: Config = {
-      serverDir: '/var/www',
-      host: '10.0.0.1',
-      port: 22,
-      username: 'deploy',
-      password: 'secret',
-      project: 'my-app',
-      dist: 'dist',
-    };
-    const auth = await resolveAuth(config);
-    expect(auth.password).toBe('secret');
-  });
-
-  it('returns privateKey when config has privateKey', async () => {
-    const config: Config = {
-      serverDir: '/var/www',
-      host: '10.0.0.1',
-      port: 22,
-      username: 'deploy',
-      privateKey: '~/.ssh/id_rsa',
-      project: 'my-app',
-      dist: 'dist',
-    };
-    const auth = await resolveAuth(config);
-    expect(auth.privateKey).toBe('~/.ssh/id_rsa');
-  });
-
-  it('returns empty object when neither password nor key provided', async () => {
-    const config: Config = {
-      serverDir: '/var/www',
-      host: '10.0.0.1',
-      port: 22,
-      username: 'deploy',
-      project: 'my-app',
-      dist: 'dist',
-    };
-    const auth = await resolveAuth(config);
-    expect(auth.password).toBeUndefined();
-    expect(auth.privateKey).toBeUndefined();
+    ).toThrow(/not found/);
   });
 });

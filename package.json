@@ -24,7 +24,7 @@
     "cli"
   ],
   "author": "Rikka",
-  "license": "GPLV3",
+  "license": "GPL-3.0-only",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@rslib/core": "^0.23.2",
@@ -32,8 +32,7 @@
     "@types/node": "^26.1.0",
     "@types/ssh2": "^1.15.5",
     "@vitest/coverage-v8": "^4.1.9",
-    "c12": "4.0.0-beta.5",
-    "citty": "^0.2.2",
+"citty": "^0.2.2",
     "consola": "^3.4.2",
     "eslint": "^10.6.0",
     "prettier": "^3.9.4",

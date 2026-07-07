@@ -19,7 +19,7 @@ function createConfig(overrides: Partial<Config> = {}): Config {
 describe('listBackups', () => {
   it('parses backup directories from ls output', async () => {
     const output = 'my-app\nmy-app.bak.1720000000000\nmy-app.bak.1710000000000\nother\n';
-    const result$ = listBackups(output, '/var/www', 'my-app');
+    const result$ = listBackups(output, 'my-app');
 
     const backups = await new Promise<any[]>((resolve) => {
       result$.subscribe({ next: resolve });
@@ -31,7 +31,7 @@ describe('listBackups', () => {
 
   it('returns empty array when no backups exist', async () => {
     const output = 'my-app\nother-dir\n';
-    const result$ = listBackups(output, '/var/www', 'my-app');
+    const result$ = listBackups(output, 'my-app');
 
     const backups = await new Promise<any[]>((resolve) => {
       result$.subscribe({ next: resolve });
@@ -79,17 +79,20 @@ describe('cleanupBackups', () => {
     const config = createConfig({
       backup: { enabled: true, keep: 2 },
     });
+    const oldestTs = 1700000000000; // 2024-11-14
+    const middleTs = 1710000000000; // 2025-03-09
+    const newestTs = 1720000000000; // 2025-07-03
     const backups = [
-      { filename: 'my-app.bak.3', date: '2024-07-03' },
-      { filename: 'my-app.bak.2', date: '2024-07-02' },
-      { filename: 'my-app.bak.1', date: '2024-07-01' },
+      { filename: `my-app.bak.${newestTs}`, date: '2025-07-03' },
+      { filename: `my-app.bak.${middleTs}`, date: '2025-03-09' },
+      { filename: `my-app.bak.${oldestTs}`, date: '2024-11-14' },
     ];
     const result$ = cleanupBackups(config, backups);
 
     result$.subscribe((cmd) => {
-      expect(cmd).toContain('1'); // oldest, exceeding keep=2
-      expect(cmd).not.toContain('3');
-      expect(cmd).not.toContain('2');
+      expect(cmd).toContain(`${oldestTs}`); // oldest, exceeding keep=2
+      expect(cmd).not.toContain(`${newestTs}`);
+      expect(cmd).not.toContain(`${middleTs}`);
     });
   });
 });
@@ -103,7 +106,7 @@ describe('backupCurrent', () => {
     // backups include "my-app" meaning the current deployment exists
     const dirContents = ['my-app', 'my-app.bak.old'];
 
-    const result$ = backupCurrent(dirContents, config, backups);
+    const result$ = backupCurrent(dirContents, config);
 
     result$.subscribe((cmd) => {
       expect(cmd).toContain('mv -v');
@@ -117,7 +120,7 @@ describe('backupCurrent', () => {
     const backups: any[] = [];
     const dirContents = ['other'];
 
-    const result$ = backupCurrent(dirContents, config, backups);
+    const result$ = backupCurrent(dirContents, config);
 
     result$.subscribe((cmd) => {
       expect(cmd).toContain('echo');

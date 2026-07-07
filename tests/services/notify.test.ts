@@ -48,6 +48,31 @@ describe('sendNotification', () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
+  it('sends GET notification when method is GET', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({ ok: true });
+    globalThis.fetch = mockFetch as any;
+
+    const config: Config = {
+      serverDir: '/var/www',
+      host: '10.0.0.1',
+      port: 22,
+      username: 'deploy',
+      project: 'my-app',
+      dist: 'dist',
+      notify: { url: 'https://hooks.example.com/status', method: 'GET' },
+    };
+
+    await sendNotification(config, true, 'Deploy successful');
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://hooks.example.com/status',
+      expect.objectContaining({
+        method: 'GET',
+        body: undefined,
+      }),
+    );
+  });
+
   it('handles fetch failure gracefully', async () => {
     const mockFetch = vi.fn().mockRejectedValue(new Error('Network error'));
     globalThis.fetch = mockFetch as any;

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { runDeploy, type DeployOptions } from '../../src/services/pipeline';
 import type { Config } from '../../src/config/schema';
 

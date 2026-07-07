@@ -6,8 +6,8 @@ import { logger } from '../utils/logger';
 
 function prompt(query: string): Promise<string> {
   const rl = createInterface({
-    input: process.stdin as any,
-    output: process.stdout as any,
+    input: process.stdin as NodeJS.ReadStream,
+    output: process.stdout as NodeJS.WriteStream,
   });
   return new Promise((resolve) => {
     rl.question(`${query}: `, (answer) => {

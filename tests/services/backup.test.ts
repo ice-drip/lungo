@@ -1,5 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
-import { of } from 'rxjs';
+import { describe, it, expect } from 'vitest';
 import dayjs from 'dayjs';
 import { listBackups, cleanupBackups, backupCurrent } from '../../src/services/backup';
 import type { Config } from '../../src/config/schema';

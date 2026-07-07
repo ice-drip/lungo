@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { execSync } from 'child_process';
 import { resolve } from 'path';
 
-const CLI = resolve(__dirname, '..', '..', 'dist', 'index.js');
+const CLI = resolve(__dirname, '..', '..', 'dist', 'bin.js');
 
 describe('CLI help', () => {
   it('shows help with --help flag', () => {

@@ -14,7 +14,6 @@ const hasDocker = (() => {
 describe.skipIf(!hasDocker)('Integration: deploy to Docker sshd', () => {
   const containerName = 'lungo-test-sshd';
   const testPassword = 'testpass123';
-  const testDir = '/tmp/lungo-test';
 
   beforeAll(async () => {
     // Start a test SSH server in Docker

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import { defineCommand, runMain } from 'citty';
 import { deploy } from './commands/deploy';
+import { init } from './commands/init';
+import { list } from './commands/list';
+import { rollback } from './commands/rollback';
 
 const main = defineCommand({
   meta: {
@@ -28,6 +31,9 @@ const main = defineCommand({
   },
   subCommands: {
     deploy,
+    init,
+    list,
+    rollback,
   },
   // When no subcommand matches, fall through to deploy (backward compatible)
   async run({ args }) {

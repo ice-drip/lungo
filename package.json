@@ -2,23 +2,15 @@
   "name": "@kaffee/lungo",
   "version": "2.0.0",
   "description": "SSH/SFTP deployment CLI with backup, rollback & webhook support",
-  "main": "dist/bin.js",
-  "bin": {
-    "lungo": "./dist/bin.js"
+  "author": "Rikka",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/ice-drip/lungo#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ice-drip/lungo.git"
   },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "rslib build",
-    "dev": "rslib build --watch",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --no-error-on-unmatched-pattern",
-    "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix",
-    "typecheck": "tsc --noEmit",
-    "prepublish": "pnpm build"
+  "bugs": {
+    "url": "https://github.com/ice-drip/lungo/issues"
   },
   "keywords": [
     "cli",
@@ -32,18 +24,33 @@
     "remote",
     "server"
   ],
-  "author": "Rikka",
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ice-drip/lungo.git"
+  "main": "dist/bin.js",
+  "bin": {
+    "lungo": "./dist/bin.js"
   },
-  "homepage": "https://github.com/ice-drip/lungo#readme",
-  "bugs": {
-    "url": "https://github.com/ice-drip/lungo/issues"
-  },
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=18"
+  },
+  "scripts": {
+    "build": "rslib build",
+    "dev": "rslib build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --no-error-on-unmatched-pattern",
+    "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix",
+    "typecheck": "tsc --noEmit",
+    "prepublish": "pnpm build"
+  },
+  "dependencies": {
+    "adm-zip": "0.5.12",
+    "console-table-printer": "^2.16.1",
+    "dayjs": "^1.11.21",
+    "rxjs": "^7.8.2",
+    "ssh2": "^1.15.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.1.0",
@@ -58,12 +65,5 @@
     "typescript": "^5.5.2",
     "vitest": "^4.1.9",
     "zod": "^4.4.3"
-  },
-  "dependencies": {
-    "adm-zip": "0.5.12",
-    "console-table-printer": "^2.16.1",
-    "dayjs": "^1.11.21",
-    "rxjs": "^7.8.2",
-    "ssh2": "^1.15.0"
   }
 }

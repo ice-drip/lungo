@@ -20,7 +20,7 @@
 
 ## Prerequisites
 
-- Node.js >= 18
+- Node.js >= 24
 - SSH access to target server
 
 ## Installation

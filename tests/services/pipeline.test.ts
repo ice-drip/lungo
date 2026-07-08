@@ -1,7 +1,15 @@
 import type { Config } from "../../src/config/schema";
 import type { DeployOptions } from "../../src/services/pipeline";
-import { Subject, of, throwError } from "rxjs";
+import { execSync } from "node:child_process";
+import { of, throwError } from "rxjs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+// ── Imports (after mocks) ──────────────────────────────────────────
+
+import { execCommand } from "../../src/core/remote-exec";
+import { sftpUpload } from "../../src/core/sftp";
+import { sshConnect } from "../../src/core/ssh";
+import { backupCurrent, cleanupBackups, listBackups } from "../../src/services/backup";
 import { runDeploy } from "../../src/services/pipeline";
 
 // ── Mocks ──────────────────────────────────────────────────────────
@@ -27,14 +35,6 @@ vi.mock("../../src/services/backup", () => ({
   cleanupBackups: vi.fn(),
   listBackups: vi.fn(),
 }));
-
-// ── Imports (after mocks) ──────────────────────────────────────────
-
-import { execSync } from "node:child_process";
-import { sshConnect } from "../../src/core/ssh";
-import { execCommand } from "../../src/core/remote-exec";
-import { sftpUpload } from "../../src/core/sftp";
-import { backupCurrent, cleanupBackups, listBackups } from "../../src/services/backup";
 
 // ── Helpers ────────────────────────────────────────────────────────
 
@@ -371,7 +371,7 @@ describe("runDeploy", () => {
       });
 
       const execCalls = vi.mocked(execCommand).mock.calls;
-      const skipCall = execCalls.find(c => c[1] === 'echo "backup skipped"');
+      const skipCall = execCalls.find(c => c[1] === "echo \"backup skipped\"");
       expect(skipCall).toBeDefined();
     });
   });

@@ -2,6 +2,13 @@ import type { Config } from "../../src/config/schema";
 import { Observable } from "rxjs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { list } from "../../src/commands/list";
+import { loadConfig } from "../../src/config/loader";
+import { execCommand } from "../../src/core/remote-exec";
+import { sshConnect } from "../../src/core/ssh";
+import { listBackups } from "../../src/services/backup";
+import { logger } from "../../src/utils/logger";
+
 vi.mock("../../src/config/loader");
 vi.mock("../../src/core/ssh");
 vi.mock("../../src/core/remote-exec");
@@ -15,13 +22,6 @@ vi.mock("console-table-printer", () => {
   }
   return { Table: MockTable, __mockAddRows: addRows, __mockPrintTable: printTable };
 });
-
-import { loadConfig } from "../../src/config/loader";
-import { list } from "../../src/commands/list";
-import { execCommand } from "../../src/core/remote-exec";
-import { sshConnect } from "../../src/core/ssh";
-import { listBackups } from "../../src/services/backup";
-import { logger } from "../../src/utils/logger";
 
 const mockLoadConfig = vi.mocked(loadConfig);
 const mockSshConnect = vi.mocked(sshConnect);

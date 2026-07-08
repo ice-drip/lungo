@@ -1,6 +1,6 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { createProgressBar } from "../../src/utils/progress";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { logger } from "../../src/utils/logger";
+import { createProgressBar } from "../../src/utils/progress";
 
 describe("createProgressBar", () => {
   let infoSpy: ReturnType<typeof vi.spyOn>;

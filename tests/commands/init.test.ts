@@ -1,5 +1,8 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import * as readline from "node:readline";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { init } from "../../src/commands/init";
+import { logger } from "../../src/utils/logger";
 
 vi.mock("node:fs", () => ({
   existsSync: vi.fn(),
@@ -25,14 +28,9 @@ vi.mock("node:readline", () => {
   };
 });
 
-import * as fs from "node:fs";
-import * as readline from "node:readline";
-import { init } from "../../src/commands/init";
-import { logger } from "../../src/utils/logger";
-
 const mockExistsSync = vi.mocked(existsSync);
-const mockWriteFileSync = vi.mocked(fs.writeFileSync);
-const mockReadFileSync = vi.mocked(fs.readFileSync);
+const mockWriteFileSync = vi.mocked(writeFileSync);
+const mockReadFileSync = vi.mocked(readFileSync);
 
 function setAnswers(answers: string[]) {
   (readline as any).__setAnswers(answers);

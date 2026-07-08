@@ -1,20 +1,18 @@
 import type { Config } from "../../src/config/schema";
 import { Observable } from "rxjs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { deploy } from "../../src/commands/deploy";
+import { loadConfig } from "../../src/config/loader";
+import { sendNotification } from "../../src/services/notify";
+import { runDeploy } from "../../src/services/pipeline";
+import { logger, setVerbose } from "../../src/utils/logger";
 
 vi.mock("../../src/config/loader");
 vi.mock("../../src/services/pipeline");
 vi.mock("../../src/services/notify");
 vi.mock("../../src/utils/logger");
 
-import { loadConfig } from "../../src/config/loader";
-import { deploy } from "../../src/commands/deploy";
-import { runDeploy } from "../../src/services/pipeline";
-import { sendNotification } from "../../src/services/notify";
-import { logger, setVerbose } from "../../src/utils/logger";
-
 const mockSetVerbose = vi.mocked(setVerbose);
-
 const mockLoadConfig = vi.mocked(loadConfig);
 const mockRunDeploy = vi.mocked(runDeploy);
 const mockSendNotification = vi.mocked(sendNotification);

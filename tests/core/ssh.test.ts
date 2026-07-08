@@ -5,6 +5,9 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+// Import AFTER mocks are set up
+import { sshConnect } from "../../src/core/ssh";
+
 // Track all Client instances created during each test
 let clientInstances: any[] = [];
 
@@ -25,7 +28,8 @@ vi.mock("ssh2", () => {
     client.connect = vi.fn(() => {
       if (mockBehavior.emitError) {
         setImmediate(() => emitter.emit("error", mockBehavior.emitError));
-      } else {
+      }
+      else {
         setImmediate(() => emitter.emit("ready"));
       }
       return client;
@@ -35,7 +39,8 @@ vi.mock("ssh2", () => {
       (_srcIP: string, _srcPort: number, _dstIP: string, _dstPort: number, cb: (err?: Error, stream?: any) => void) => {
         if (mockBehavior.forwardOutError) {
           setImmediate(() => cb(mockBehavior.forwardOutError));
-        } else {
+        }
+        else {
           const stream = new EventEmitter();
           setImmediate(() => cb(undefined, stream));
         }
@@ -56,9 +61,6 @@ vi.mock("node:fs", async () => {
     readFileSync: vi.fn().mockReturnValue("mock-key-content"),
   };
 });
-
-// Import AFTER mocks are set up
-import { sshConnect } from "../../src/core/ssh";
 
 function createConfig(overrides: Partial<Config> = {}): Config {
   return {

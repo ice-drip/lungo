@@ -2,17 +2,17 @@ import type { Config } from "../../src/config/schema";
 import { Observable } from "rxjs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("../../src/config/loader");
-vi.mock("../../src/core/ssh");
-vi.mock("../../src/core/remote-exec");
-vi.mock("../../src/services/backup");
-
-import { loadConfig } from "../../src/config/loader";
 import { rollback } from "../../src/commands/rollback";
+import { loadConfig } from "../../src/config/loader";
 import { execCommand } from "../../src/core/remote-exec";
 import { sshConnect } from "../../src/core/ssh";
 import { listBackups } from "../../src/services/backup";
 import { logger } from "../../src/utils/logger";
+
+vi.mock("../../src/config/loader");
+vi.mock("../../src/core/ssh");
+vi.mock("../../src/core/remote-exec");
+vi.mock("../../src/services/backup");
 
 const mockLoadConfig = vi.mocked(loadConfig);
 const mockSshConnect = vi.mocked(sshConnect);
@@ -238,7 +238,7 @@ describe("rollback command", () => {
 
     await expect(
       rollback.run({ args: { ...defaultArgs, to: "9999999999999" } }),
-    ).rejects.toThrow('Backup with timestamp "9999999999999" not found');
+    ).rejects.toThrow("Backup with timestamp \"9999999999999\" not found");
   });
 
   it("rejects when SSH connection fails", async () => {

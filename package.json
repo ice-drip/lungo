@@ -1,9 +1,14 @@
 {
   "name": "@kaffee/lungo",
   "version": "2.0.0",
-  "description": "SSH/SFTP deployment CLI tool",
+  "description": "SSH/SFTP deployment CLI with backup, rollback & webhook support",
   "main": "dist/bin.js",
-  "repository": "ice-drip/lungo",
+  "bin": {
+    "lungo": "./dist/bin.js"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rslib build",
     "dev": "rslib build --watch",
@@ -15,14 +20,31 @@
     "typecheck": "tsc --noEmit",
     "prepublish": "pnpm build"
   },
-  "bin": {
-    "lungo": "./dist/bin.js"
-  },
   "keywords": [
-    "cli"
+    "cli",
+    "deploy",
+    "deployment",
+    "ssh",
+    "sftp",
+    "backup",
+    "rollback",
+    "devops",
+    "remote",
+    "server"
   ],
   "author": "Rikka",
-  "license": "GPL-3.0-only",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ice-drip/lungo.git"
+  },
+  "homepage": "https://github.com/ice-drip/lungo#readme",
+  "bugs": {
+    "url": "https://github.com/ice-drip/lungo/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^9.1.0",
     "@rslib/core": "^0.23.2",
